@@ -1,5 +1,5 @@
 # isentropic_flow
-Caluclates Isentropic Flow Properties
+Calculates Isentropic Properties during flow.
 
 Dependencies:
 This package depends on Python, NumPy and SciPy 
