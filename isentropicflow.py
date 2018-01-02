@@ -29,6 +29,12 @@ Created on Fri Dec 22 13:35:56 2017
 import numpy as np
 import scipy
 
+def return_value(param):
+    if  __name__=='__main__':
+        print("Parameter:",param)
+    else:
+        pass
+
     #%% Final Values           
 class IsentropicFlow(object):  
     
@@ -70,8 +76,6 @@ class IsentropicFlow(object):
             self.M=M_calc
             
         else:
-            print(kwargs)
-            print('Type=',type(kwargs))
             key = list(dict.keys(kwargs))  
             value=list(dict.values(kwargs))
 #            if type(value) in [int,float]:
@@ -106,32 +110,33 @@ class IsentropicFlow(object):
     
      @property
      def T_T0(self):
-         return 1/self.T0_T()
+         return 1/self.T0_T
      
      @property   
      def p_p0(self):
-         return 1/self.p0_p()
-     
+         return 1/self.p0_p
      @property   
      def rho_rho0(self):
-         return 1/self.rho0_rho()
+         return 1/self.rho0_rho
      
      
      #%%Mach Calculator
      def mach_calculator(self,value,check):
             value=value[0]
+            print(value)
+            print(type(value))
+#            value=np.array(value)
             if check in ['mach','m','machnumber']:
                 param='Mach'
                 print(value)
-                
                 if any(i<0 for i in value):
                     raise ValueError('Error: Value MissMatch')
-                print('Parameter :',param)
+                return_value(param)
                 M_calc=value
                        
             elif check in ['temp','tempratio','temperatureratio','t','tratio','t_t0']:
                param='TempRatio'
-               print('Parameter=',param)
+               return_value(param)
                if any(value<0):
                    raise ValueError('Error : "TemperatureRatio" Value less than 0')
                elif any(value>1):
@@ -141,7 +146,7 @@ class IsentropicFlow(object):
                
             elif check in ['pressureratio','p','pratio','p_p0']:
                param='PressureRatio'
-               print('Parameter=',param)
+               return_value(param)
                if any(value<0):
                    raise ValueError('Error : "PressureRatio" Value less than 0')
                elif any(value>1):
@@ -152,7 +157,7 @@ class IsentropicFlow(object):
                
             elif check in ['rhoratio','rratio','dratio','densityratio','r','d','rho_rho0','r_r0']:
                param='DensityRatio'
-               print('Parameter=',param)
+               return_value(param)
                if any(value<0):
                    raise ValueError('Error : "DensityRatio" Value less than 0')
                elif any(value>1):
@@ -163,7 +168,7 @@ class IsentropicFlow(object):
             
             elif check in ['areasubratio','asubratio','asub']:
                 param='AreaRatio Subsoinc'
-                print('Parameter=',param)
+                return_value(param)
                 if any(value<1):
                     raise ValueError('Error : "AreaRatio" Value less than 1')
                 afunc = lambda x : value-(1/x)*np.power((2/((self.k+1))*(1+(self.k-1)/2*np.power(x,2))),(self.k+1)/(2*(self.k-1)))
@@ -171,7 +176,7 @@ class IsentropicFlow(object):
                 M_calc=scipy.optimize.fsolve(afunc,x)
             elif check in ['areasupratio','asupratio','asup']:
                 param='AreaRatio Supersonic'
-                print('Parameter=',param)
+                return_value(param)
                 if any(value<1):
                     raise ValueError('Error : "AreaRatio" Value less than 1')
                 afunc = lambda x : value-(1/x)*np.power((2/((self.k+1))*(1+(self.k-1)/2*np.power(x,2))),(self.k+1)/(2*(self.k-1)))
@@ -180,7 +185,14 @@ class IsentropicFlow(object):
             else:
                 print()
                 raise ValueError('Error:ParameterError \nFor input : Gamma=1.4 and Mach=2 enter input as (1.4,2) or (1.4,M=2)\nFor TemperatureRatio: T=2.5 or T=[2.5,3]\nSame as TemperatureRatio for PressureRatio (P), DensityRatio(R)\nFor AreaRatio as input enter Asub for subsonic solution and Asup for supersonic solution')
-            return M_calc   
+            return M_calc  
+ #%%      
+def mach_angle(M):
+    if M<1:
+        raise('Mach number must be supersonic')
+    else:
+        return np.arcsin(1/M)
+        
 #%%  
 emp1=IsentropicFlow(1.4,[6,3,6])    
 
