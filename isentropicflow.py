@@ -71,7 +71,7 @@ class IsentropicFlow(object):
             raise ValueError('Error: Not enough input arguments')
         elif a==1:
             param='Mach'
-            print("Paramater:",param)
+            return_value(param)
             M_calc=args[0]
             self.M=M_calc
             
@@ -123,12 +123,9 @@ class IsentropicFlow(object):
      #%%Mach Calculator
      def mach_calculator(self,value,check):
             value=value[0]
-            print(value)
-            print(type(value))
 #            value=np.array(value)
             if check in ['mach','m','machnumber']:
                 param='Mach'
-                print(value)
                 if any(i<0 for i in value):
                     raise ValueError('Error: Value MissMatch')
                 return_value(param)
